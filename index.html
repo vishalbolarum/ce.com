@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Calm Electronics</title>
+<meta name="description" content="Calm Electronics supplies microcontrollers, single-board computers, bulk resistors, capacitors and discrete parts from Newcastle upon Tyne, UK.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&family=Martian+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* Layout idea: a component datasheet. Spec-sheet rules and mono labels, resistor colour bands encode section numbers, one deep solder-mask panel for contact. */
+:root {
+  --paper: #EDF0EC;
+  --surface: #F7F8F5;
+  --ink: #15211E;
+  --muted: #56655F;
+  --line: #C9D2CC;
+  --copper: #A4552A;
+  --mask: #1C3A32;
+  --mask-ink: #E6EEE9;
+  --mask-muted: #A6BDB3;
+
+  --band-black: #1B1B1B;
+  --band-brown: #6E3F1E;
+  --band-red: #C0392B;
+  --band-orange: #E0791E;
+  --band-gold: #B8913A;
+
+  --f-display: "Bricolage Grotesque", "Avenir Next", "Segoe UI", sans-serif;
+  --f-body: "Atkinson Hyperlegible", "Helvetica Neue", Arial, sans-serif;
+  --f-mono: "Martian Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+
+  --wrap: 1160px;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0F1715;
+    --surface: #15201D;
+    --ink: #E3EAE6;
+    --muted: #94A49D;
+    --line: #2A3833;
+    --copper: #DE915E;
+    --mask: #173229;
+    --mask-ink: #E6EEE9;
+    --mask-muted: #9DB6AB;
+    --band-black: #050505;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0F1715;
+  --surface: #15201D;
+  --ink: #E3EAE6;
+  --muted: #94A49D;
+  --line: #2A3833;
+  --copper: #DE915E;
+  --mask: #173229;
+  --mask-ink: #E6EEE9;
+  --mask-muted: #9DB6AB;
+  --band-black: #050505;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--f-body);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--copper); outline-offset: 3px; border-radius: 2px; }
+h1, h2, h3 { font-family: var(--f-display); text-wrap: balance; margin: 0; }
+p { margin: 0; }
+.wrap { width: min(var(--wrap), 100% - 2.5rem); margin-inline: auto; }
+.mono { font-family: var(--f-mono); font-size: 0.75rem; letter-spacing: 0.02em; text-transform: uppercase; }
+
+/* ---------- Header ---------- */
+.site-head { border-bottom: 1px solid var(--line); }
+.site-head .wrap { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; padding-block: 1.1rem; flex-wrap: wrap; }
+.brand { display: flex; align-items: center; gap: 0.7rem; text-decoration: none; }
+.brand svg { flex: none; }
+.brand b { font-family: var(--f-display); font-weight: 800; font-size: 1.25rem; letter-spacing: -0.01em; font-variation-settings: "opsz" 40; }
+.nav { display: flex; gap: 1.6rem; flex-wrap: wrap; }
+.nav a { text-decoration: none; color: var(--muted); }
+.nav a:hover { color: var(--ink); }
+
+/* ---------- Hero ---------- */
+.hero { padding-block: clamp(3rem, 8vw, 6rem) clamp(2.5rem, 6vw, 4.5rem); }
+.hero .wrap { display: grid; grid-template-columns: 1.15fr 1fr; gap: clamp(2rem, 5vw, 4.5rem); align-items: center; }
+.eyebrow { color: var(--copper); display: flex; gap: 0.75rem; align-items: center; margin-bottom: 1.4rem; }
+.eyebrow::before { content: ""; width: 28px; height: 1px; background: currentColor; }
+.hero h1 {
+  font-size: clamp(2.8rem, 7vw, 5.4rem);
+  line-height: 0.95;
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  font-variation-settings: "opsz" 96;
+}
+.hero h1 em { font-style: normal; font-weight: 400; color: var(--muted); }
+.lede { margin-top: 1.6rem; max-width: 34rem; font-size: 1.15rem; color: var(--muted); }
+.cta { display: flex; gap: 0.8rem; flex-wrap: wrap; margin-top: 2rem; }
+.btn {
+  display: inline-flex; align-items: center; gap: 0.55rem;
+  padding: 0.85rem 1.3rem; border-radius: 999px;
+  font-weight: 700; text-decoration: none; border: 1.5px solid var(--ink);
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.btn-solid { background: var(--ink); color: var(--paper); }
+.btn-solid:hover { background: var(--copper); border-color: var(--copper); }
+.btn-ghost:hover { background: var(--ink); color: var(--paper); }
+
+.scope {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 1rem 1rem 0.9rem;
+  margin: 0;
+  min-width: 0;
+}
+.scope-top, .scope-bot { display: flex; justify-content: space-between; color: var(--muted); gap: 1rem; }
+.scope-top { margin-bottom: 0.6rem; }
+.scope-bot { margin-top: 0.6rem; }
+.scope canvas { display: block; width: 100%; height: 220px; }
+.dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--copper); margin-right: 0.45rem; vertical-align: 1px; }
+
+/* ---------- Strip ---------- */
+.strip { border-block: 1px solid var(--line); }
+.strip .wrap { display: grid; grid-template-columns: repeat(3, 1fr); }
+.strip div { padding: 1.2rem 1.2rem 1.2rem 0; display: flex; flex-direction: column; gap: 0.2rem; }
+.strip div + div { border-left: 1px solid var(--line); padding-left: 1.2rem; }
+.strip span { color: var(--muted); }
+.strip strong { font-family: var(--f-display); font-size: 1.15rem; font-weight: 600; }
+
+/* ---------- Sections ---------- */
+section { padding-block: clamp(3.5rem, 8vw, 6rem); }
+.sec-head { display: grid; grid-template-columns: 220px 1fr; gap: 2rem; margin-bottom: 2.6rem; align-items: start; }
+.sec-head h2 { font-size: clamp(2rem, 4.2vw, 3rem); line-height: 1.05; font-weight: 800; letter-spacing: -0.025em; font-variation-settings: "opsz" 72; }
+.sec-head p { margin-top: 0.9rem; color: var(--muted); max-width: 40rem; }
+.sec-label { display: flex; flex-direction: column; gap: 0.7rem; color: var(--muted); padding-top: 0.5rem; }
+
+/* Resistor glyph: bands encode the section number */
+.resistor { display: flex; align-items: center; height: 18px; width: 104px; }
+.resistor .lead { flex: 1; height: 2px; background: var(--muted); opacity: 0.6; }
+.resistor .body {
+  display: flex; gap: 5px; align-items: stretch; padding: 0 9px;
+  height: 18px; border-radius: 9px; background: #D9C7A4;
+}
+.resistor .body i { width: 5px; display: block; }
+.b-black { background: var(--band-black); }
+.b-brown { background: var(--band-brown); }
+.b-red { background: var(--band-red); }
+.b-orange { background: var(--band-orange); }
+.b-gold { background: var(--band-gold); margin-left: 6px; }
+
+/* ---------- Products ---------- */
+.parts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.25rem; }
+.part {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  display: flex; flex-direction: column;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+.part:hover { border-color: var(--copper); transform: translateY(-2px); }
+@media (prefers-reduced-motion: reduce) { .part:hover { transform: none; } }
+.part-top { display: flex; justify-content: space-between; align-items: center; padding: 0.9rem 1.2rem; border-bottom: 1px dashed var(--line); color: var(--muted); }
+.part-art { padding: 1.6rem 1.2rem 0.4rem; color: var(--ink); }
+.part-art svg { width: 100%; height: 92px; display: block; }
+.part-body { padding: 1rem 1.2rem 1.4rem; display: flex; flex-direction: column; gap: 0.8rem; flex: 1; }
+.part h3 { font-size: 1.45rem; line-height: 1.15; font-weight: 600; letter-spacing: -0.01em; }
+.part p { color: var(--muted); font-size: 0.98rem; }
+.spec { list-style: none; margin: 0.4rem 0 0; padding: 0; border-top: 1px solid var(--line); }
+.spec li { display: flex; justify-content: space-between; gap: 1rem; padding: 0.55rem 0; border-bottom: 1px solid var(--line); font-size: 0.93rem; }
+.spec li span:first-child { color: var(--muted); }
+.spec li span:last-child { text-align: right; }
+
+/* ---------- Process ---------- */
+.process { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; border-top: 1.5px solid var(--ink); }
+.step { padding: 1.6rem 1.6rem 0 0; display: flex; flex-direction: column; gap: 0.6rem; }
+.step + .step { padding-left: 1.6rem; border-left: 1px solid var(--line); }
+.step .mono { color: var(--copper); }
+.step h3 { font-size: 1.3rem; font-weight: 600; }
+.step p { color: var(--muted); }
+
+/* ---------- Contact (solder-mask panel) ---------- */
+.contact { background: var(--mask); color: var(--mask-ink); position: relative; overflow: hidden; }
+.contact::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0.12;
+  background-image:
+    linear-gradient(var(--mask-muted) 1px, transparent 1px),
+    linear-gradient(90deg, var(--mask-muted) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+.contact .wrap { position: relative; }
+.contact .sec-head p, .contact .sec-label { color: var(--mask-muted); }
+.people { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.25rem; }
+.card {
+  border: 1px solid rgba(230, 238, 233, 0.22);
+  border-radius: 6px;
+  padding: 1.5rem;
+  display: flex; flex-direction: column; gap: 1rem;
+  background: rgba(0, 0, 0, 0.14);
+}
+.card .role { color: #E9A877; }
+.card h3 { font-size: 1.7rem; font-weight: 600; letter-spacing: -0.01em; line-height: 1.1; }
+.card .note { color: var(--mask-muted); font-size: 0.96rem; }
+.lines { display: flex; flex-direction: column; gap: 0.55rem; margin-top: auto; }
+.line {
+  display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;
+  border-top: 1px solid rgba(230, 238, 233, 0.16); padding-top: 0.55rem;
+}
+.line a { text-decoration: none; overflow-wrap: anywhere; font-weight: 700; }
+.line a:hover { text-decoration: underline; text-underline-offset: 3px; }
+.copy {
+  flex: none; font: inherit; font-family: var(--f-mono); font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.04em;
+  color: var(--mask-ink); background: transparent; border: 1px solid rgba(230, 238, 233, 0.35);
+  border-radius: 999px; padding: 0.3rem 0.65rem; cursor: pointer;
+}
+.copy:hover { background: rgba(230, 238, 233, 0.12); }
+address { font-style: normal; font-size: 1.15rem; line-height: 1.5; }
+
+/* ---------- Footer ---------- */
+.site-foot { padding-block: 2rem; border-top: 1px solid var(--line); }
+.site-foot .wrap { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; color: var(--muted); }
+
+/* ---------- Load moment ---------- */
+@keyframes rise { from { transform: translateY(10px); opacity: 0.001; } to { transform: none; opacity: 1; } }
+.hero-copy > * { animation: rise 0.7s cubic-bezier(.2,.7,.2,1) both; }
+.hero-copy > *:nth-child(2) { animation-delay: 0.06s; }
+.hero-copy > *:nth-child(3) { animation-delay: 0.12s; }
+.hero-copy > *:nth-child(4) { animation-delay: 0.18s; }
+@media (prefers-reduced-motion: reduce) { .hero-copy > * { animation: none; } }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 920px) {
+  .hero .wrap { grid-template-columns: 1fr; }
+  .parts, .people { grid-template-columns: 1fr; }
+  .sec-head { grid-template-columns: 1fr; gap: 1rem; }
+  .sec-label { flex-direction: row; align-items: center; gap: 1rem; padding-top: 0; }
+  .process { grid-template-columns: 1fr; }
+  .step, .step + .step { padding: 1.4rem 0; border-left: 0; }
+  .step + .step { border-top: 1px solid var(--line); }
+}
+@media (max-width: 600px) {
+  .strip .wrap { grid-template-columns: 1fr; }
+  .strip div, .strip div + div { padding: 0.9rem 0; border-left: 0; }
+  .strip div + div { border-top: 1px solid var(--line); }
+  .nav { gap: 1rem; font-size: 0.95rem; }
+}
+</style>
+</head>
+<body>
+
+<header class="site-head">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="Calm Electronics, back to top">
+      <!-- Capacitor symbol mark -->
+      <svg width="34" height="24" viewBox="0 0 34 24" aria-hidden="true">
+        <line x1="0" y1="12" x2="13" y2="12" stroke="currentColor" stroke-width="2"/>
+        <line x1="14" y1="3" x2="14" y2="21" stroke="currentColor" stroke-width="3"/>
+        <path d="M21 3 Q17 12 21 21" fill="none" stroke="var(--copper)" stroke-width="3"/>
+        <line x1="20" y1="12" x2="34" y2="12" stroke="currentColor" stroke-width="2"/>
+      </svg>
+      <b>Calm Electronics</b>
+    </a>
+    <nav class="nav" aria-label="Sections">
+      <a href="#products">Products</a>
+      <a href="#sourcing">Sourcing</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="wrap">
+      <div class="hero-copy">
+        <p class="eyebrow mono">Electronic components · Newcastle upon Tyne</p>
+        <h1 id="hero-title">Parts, <em>without</em> the panic.</h1>
+        <p class="lede">Microcontrollers, single-board computers and bulk passives for engineers, repair shops and manufacturers across the UK. Talk to a real person, get a clear quote, and let our sourcing desk chase the parts that are hard to find.</p>
+        <div class="cta">
+          <a class="btn btn-solid" href="#contact">Request a quote</a>
+          <a class="btn btn-ghost" href="#products">Browse product lines</a>
+        </div>
+      </div>
+      <figure class="scope" aria-label="Illustration: a noisy signal settling into a clean waveform">
+        <div class="scope-top mono"><span><span class="dot"></span>CH1 · Supply chain</span><span>Filtered</span></div>
+        <canvas id="wave" aria-hidden="true"></canvas>
+        <div class="scope-bot mono"><span>Enquiry</span><span>Delivered</span></div>
+      </figure>
+    </div>
+  </section>
+
+  <div class="strip">
+    <div class="wrap">
+      <div><span class="mono">Based in</span><strong>Newcastle upon Tyne, UK</strong></div>
+      <div><span class="mono">Supplying</span><strong>Single units to full reels</strong></div>
+      <div><span class="mono">Sales line</span><strong>+44 7393 550174</strong></div>
+    </div>
+  </div>
+
+  <section id="products" aria-labelledby="products-title">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="sec-label">
+          <div class="resistor" title="Bands: black, brown = 01"><span class="lead"></span><span class="body"><i class="b-black"></i><i class="b-brown"></i><i class="b-gold"></i></span><span class="lead"></span></div>
+          <span class="mono">01 · Product lines</span>
+        </div>
+        <div>
+          <h2 id="products-title">Three lines, stocked and sourced.</h2>
+          <p>From a single development board for a prototype to bulk reels for a production run. Send us part numbers or a bill of materials and we will quote against it line by line.</p>
+        </div>
+      </div>
+
+      <div class="parts">
+        <article class="part">
+          <div class="part-top mono"><span>Line A</span><span>MCU / SBC</span></div>
+          <div class="part-art" aria-hidden="true">
+            <svg viewBox="0 0 300 92">
+              <g fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="110" y="16" width="80" height="60" rx="4"/>
+                <circle cx="122" cy="28" r="3" fill="var(--copper)" stroke="none"/>
+              </g>
+              <g stroke="currentColor" stroke-width="2">
+                <line x1="124" y1="16" x2="124" y2="6"/><line x1="138" y1="16" x2="138" y2="6"/><line x1="152" y1="16" x2="152" y2="6"/><line x1="166" y1="16" x2="166" y2="6"/><line x1="180" y1="16" x2="180" y2="6"/>
+                <line x1="124" y1="76" x2="124" y2="86"/><line x1="138" y1="76" x2="138" y2="86"/><line x1="152" y1="76" x2="152" y2="86"/><line x1="166" y1="76" x2="166" y2="86"/><line x1="180" y1="76" x2="180" y2="86"/>
+                <line x1="110" y1="32" x2="100" y2="32"/><line x1="110" y1="46" x2="100" y2="46"/><line x1="110" y1="60" x2="100" y2="60"/>
+                <line x1="190" y1="32" x2="200" y2="32"/><line x1="190" y1="46" x2="200" y2="46"/><line x1="190" y1="60" x2="200" y2="60"/>
+              </g>
+              <g stroke="var(--copper)" stroke-width="1.5" fill="none" opacity="0.8">
+                <path d="M100 32 H60 V14 H20"/><path d="M100 60 H70 V78 H20"/>
+                <path d="M200 46 H240 V20 H280"/><path d="M200 60 H250 V80 H280"/>
+              </g>
+            </svg>
+          </div>
+          <div class="part-body">
+            <h3>Microcontrollers &amp; Single-Board Computers</h3>
+            <p>Chips, modules and boards for prototypes, products and the classroom bench.</p>
+            <ul class="spec">
+              <li><span>Microcontrollers</span><span>8, 16 &amp; 32-bit</span></li>
+              <li><span>Wireless modules</span><span>Wi-Fi · Bluetooth</span></li>
+              <li><span>Boards</span><span>SBCs · dev kits</span></li>
+              <li><span>Quantities</span><span>1 unit to tray</span></li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="part">
+          <div class="part-top mono"><span>Line B</span><span>Passives / R</span></div>
+          <div class="part-art" aria-hidden="true">
+            <svg viewBox="0 0 300 92">
+              <line x1="10" y1="46" x2="96" y2="46" stroke="currentColor" stroke-width="2"/>
+              <line x1="204" y1="46" x2="290" y2="46" stroke="currentColor" stroke-width="2"/>
+              <rect x="96" y="28" width="108" height="36" rx="18" fill="#D9C7A4"/>
+              <rect x="116" y="28" width="9" height="36" fill="var(--band-orange)"/>
+              <rect x="134" y="28" width="9" height="36" fill="var(--band-orange)"/>
+              <rect x="152" y="28" width="9" height="36" fill="var(--band-red)"/>
+              <rect x="182" y="28" width="9" height="36" fill="var(--band-gold)"/>
+              <text x="150" y="86" text-anchor="middle" font-family="Martian Mono, monospace" font-size="10" fill="var(--copper)">3.3 kΩ ±5%</text>
+            </svg>
+          </div>
+          <div class="part-body">
+            <h3>Bulk Resistors</h3>
+            <p>Through-hole and surface-mount resistors by the bag, the box or the reel.</p>
+            <ul class="spec">
+              <li><span>Formats</span><span>THT · SMD</span></li>
+              <li><span>Value series</span><span>E12 · E24 · E96</span></li>
+              <li><span>Tolerance</span><span>General to precision</span></li>
+              <li><span>Packing</span><span>Bags · cut tape · reels</span></li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="part">
+          <div class="part-top mono"><span>Line C</span><span>C / Discretes</span></div>
+          <div class="part-art" aria-hidden="true">
+            <svg viewBox="0 0 300 92">
+              <g fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="10" y1="46" x2="64" y2="46"/>
+                <line x1="64" y1="26" x2="64" y2="66" stroke-width="3"/>
+                <path d="M78 26 Q70 46 78 66" stroke="var(--copper)" stroke-width="3"/>
+                <line x1="76" y1="46" x2="140" y2="46"/>
+                <path d="M140 30 L172 46 L140 62 Z" fill="currentColor" fill-opacity="0.08"/>
+                <line x1="172" y1="30" x2="172" y2="62" stroke-width="3"/>
+                <line x1="172" y1="46" x2="290" y2="46"/>
+                <circle cx="240" cy="46" r="20"/>
+                <line x1="232" y1="34" x2="232" y2="58"/>
+                <line x1="232" y1="40" x2="250" y2="30"/>
+                <line x1="232" y1="52" x2="250" y2="62"/>
+              </g>
+            </svg>
+          </div>
+          <div class="part-body">
+            <h3>Capacitors &amp; Discrete Parts</h3>
+            <p>The everyday parts every board needs, in volumes that keep your line running.</p>
+            <ul class="spec">
+              <li><span>Capacitors</span><span>Ceramic · electrolytic · film</span></li>
+              <li><span>Semiconductors</span><span>Diodes · transistors · MOSFETs</span></li>
+              <li><span>Also</span><span>Inductors · crystals · LEDs</span></li>
+              <li><span>Packing</span><span>Bags · cut tape · reels</span></li>
+            </ul>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="sourcing" aria-labelledby="sourcing-title" style="padding-top: 0;">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="sec-label">
+          <div class="resistor" title="Bands: black, red = 02"><span class="lead"></span><span class="body"><i class="b-black"></i><i class="b-red"></i><i class="b-gold"></i></span><span class="lead"></span></div>
+          <span class="mono">02 · How we work</span>
+        </div>
+        <div>
+          <h2 id="sourcing-title">Can't find it? Our sourcing desk will.</h2>
+          <p>Shortages, long lead times and end-of-life notices are part of the job. Haoyu Chin runs our sourcing and works through our supplier network to find the parts your distributor has run out of.</p>
+        </div>
+      </div>
+      <div class="process">
+        <div class="step">
+          <span class="mono">Step 1</span>
+          <h3>Send your list</h3>
+          <p>Email part numbers, quantities or a full BOM to sales or sourcing. A spreadsheet is fine.</p>
+        </div>
+        <div class="step">
+          <span class="mono">Step 2</span>
+          <h3>Get a clear quote</h3>
+          <p>We come back with pricing and availability per line, plus alternatives where a part is hard to get.</p>
+        </div>
+        <div class="step">
+          <span class="mono">Step 3</span>
+          <h3>Parts on the way</h3>
+          <p>Once you confirm, we ship from the UK and keep you updated until the parts arrive.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="contact" aria-labelledby="contact-title">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="sec-label">
+          <div class="resistor" title="Bands: black, orange = 03"><span class="lead" style="background: var(--mask-muted)"></span><span class="body"><i class="b-black"></i><i class="b-orange"></i><i class="b-gold"></i></span><span class="lead" style="background: var(--mask-muted)"></span></div>
+          <span class="mono">03 · Contact</span>
+        </div>
+        <div>
+          <h2 id="contact-title">Talk to a person, not a portal.</h2>
+          <p>Call or email Hussein for orders and quotes. Send hard-to-find parts and BOMs straight to Haoyu.</p>
+        </div>
+      </div>
+
+      <div class="people">
+        <div class="card">
+          <span class="role mono">Sales</span>
+          <h3>Hussein H.</h3>
+          <p class="note">Quotes, orders, pricing and account questions.</p>
+          <div class="lines">
+            <div class="line">
+              <a href="tel:+447393550174">+44 7393 550174</a>
+              <button class="copy" type="button" id="copy-phone" data-copy="+44 7393 550174">Copy</button>
+            </div>
+            <div class="line">
+              <a href="mailto:h.hamid@calmelectronics.com">h.hamid@calmelectronics.com</a>
+              <button class="copy" type="button" id="copy-sales" data-copy="h.hamid@calmelectronics.com">Copy</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <span class="role mono">Sourcing</span>
+          <h3>Haoyu Chin</h3>
+          <p class="note">Shortages, obsolete parts, long lead times and BOM sourcing.</p>
+          <div class="lines">
+            <div class="line">
+              <a href="mailto:h.chin@calmelectronics.com">h.chin@calmelectronics.com</a>
+              <button class="copy" type="button" id="copy-sourcing" data-copy="h.chin@calmelectronics.com">Copy</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <span class="role mono">Address</span>
+          <address>
+            Calm Electronics<br>
+            54 Silver Lonnen<br>
+            Newcastle upon Tyne<br>
+            NE5 2HD<br>
+            United Kingdom
+          </address>
+          <div class="lines">
+            <div class="line">
+              <a href="https://www.google.com/maps/search/?api=1&amp;query=54+Silver+Lonnen+Newcastle+upon+Tyne+NE5+2HD">Open in Google Maps</a>
+              <button class="copy" type="button" id="copy-address" data-copy="54 Silver Lonnen, Newcastle upon Tyne NE5 2HD, United Kingdom">Copy</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-foot">
+  <div class="wrap">
+    <span>© <span id="year">2026</span> Calm Electronics · 54 Silver Lonnen, Newcastle upon Tyne NE5 2HD</span>
+    <span class="mono">Microcontrollers · Resistors · Capacitors · Discretes</span>
+  </div>
+</footer>
+
+<script>
+(function () {
+  // Footer year
+  var y = document.getElementById('year');
+  if (y) y.textContent = new Date().getFullYear();
+
+  // Copy buttons
+  document.querySelectorAll('.copy').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var text = btn.getAttribute('data-copy');
+      var done = function (label) { btn.textContent = label; setTimeout(function () { btn.textContent = 'Copy'; }, 1600); };
+      try {
+        navigator.clipboard.writeText(text).then(function () { done('Copied'); }, function () { done('Select text'); });
+      } catch (e) { done('Select text'); }
+    });
+  });
+
+  // Scope waveform: noisy on the left, settling into a clean sine on the right
+  var canvas = document.getElementById('wave');
+  if (!canvas) return;
+  var ctx = canvas.getContext('2d');
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Deterministic pseudo-noise so the drawing is stable between frames
+  var seed = 7;
+  function rnd() { seed = (seed * 16807) % 2147483647; return seed / 2147483647 - 0.5; }
+  var noise = [];
+  for (var i = 0; i < 600; i++) noise.push(rnd());
+
+  function color(name) { return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+
+  function draw(progress) {
+    var dpr = window.devicePixelRatio || 1;
+    var w = canvas.clientWidth, h = canvas.clientHeight;
+    if (canvas.width !== Math.round(w * dpr) || canvas.height !== Math.round(h * dpr)) {
+      canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr);
+    }
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, w, h);
+
+    // Grid
+    ctx.strokeStyle = color('--line');
+    ctx.lineWidth = 1;
+    var cols = 10, rows = 6;
+    for (var c = 0; c <= cols; c++) { var x = Math.round(c * w / cols) + 0.5; ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke(); }
+    for (var r = 0; r <= rows; r++) { var yy = Math.round(r * h / rows) + 0.5; ctx.beginPath(); ctx.moveTo(0, yy); ctx.lineTo(w, yy); ctx.stroke(); }
+
+    // Trace
+    var mid = h / 2, amp = h * 0.26, n = 600, end = Math.floor(n * progress);
+    ctx.beginPath();
+    for (var k = 0; k <= end && k < n; k++) {
+      var t = k / (n - 1);
+      var calm = Math.min(1, Math.max(0, (t - 0.18) / 0.5)); // 0 = noisy, 1 = calm
+      calm = calm * calm * (3 - 2 * calm);
+      var sine = Math.sin(t * Math.PI * 6);
+      var jitter = noise[k] * 2.4 + Math.sin(t * 140) * 0.35;
+      var v = sine * (0.55 + 0.45 * calm) + jitter * (1 - calm);
+      var px = t * w, py = mid - v * amp;
+      if (k === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+    }
+    ctx.strokeStyle = color('--copper');
+    ctx.lineWidth = 2;
+    ctx.lineJoin = 'round';
+    ctx.stroke();
+
+    // Leading point
+    if (end > 0) {
+      var tt = Math.min(end, n - 1) / (n - 1);
+      var calm2 = Math.min(1, Math.max(0, (tt - 0.18) / 0.5)); calm2 = calm2 * calm2 * (3 - 2 * calm2);
+      var v2 = Math.sin(tt * Math.PI * 6) * (0.55 + 0.45 * calm2) + (noise[Math.min(end, n - 1)] * 2.4 + Math.sin(tt * 140) * 0.35) * (1 - calm2);
+      ctx.fillStyle = color('--copper');
+      ctx.beginPath(); ctx.arc(tt * w, mid - v2 * amp, 4, 0, Math.PI * 2); ctx.fill();
+    }
+  }
+
+  var progress = reduce ? 1 : 0.35; // resting state already shows a trace
+  function frame() {
+    progress = Math.min(1, progress + 0.012);
+    draw(progress);
+    if (progress < 1) requestAnimationFrame(frame);
+  }
+  draw(progress);
+  if (!reduce) requestAnimationFrame(frame);
+
+  window.addEventListener('resize', function () { draw(progress); });
+  if (window.matchMedia) {
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function () { draw(progress); });
+  }
+  new MutationObserver(function () { draw(progress); }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+})();
+</script>
+</body>
+</html>
